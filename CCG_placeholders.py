@@ -1,8 +1,14 @@
-import json, sys, traceback
+import json, sys, traceback, platform
+
+def get_export_path():
+    if platform.system()=="Darwin":
+        return raw_input("Enter path to export: ")
+    else:
+        return sys.argv[1]
 
 try: # errors end up in error.txt
     # Load in the export (dropped onto CCG_placeholders.py)
-    with open(sys.argv[1]) as f:
+    with open(get_export_path()) as f:
         export = json.load(f)
 
     # Figure out where our GIDs start
