@@ -1,0 +1,8 @@
+Gator Bowl,Dixie Coast,1,Heartland,1
+Citrus Bowl,Western,1,Great Lakes,1
+Outback Bowl,Western,2,Heartland,2
+Alamo Bowl,Texas Delta,1,Dixie Coast,3
+Texas Bowl,Texas Delta,2,Western,3
+New Orleans Bowl,Dixie Coast,2,Texas Delta,3
+Music City Bowl,Great Lakes,2,Heartland,3
+New Mexico Bowl,None,None,None,None
