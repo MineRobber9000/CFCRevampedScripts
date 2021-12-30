@@ -2,7 +2,7 @@ import json, sys, traceback, platform
 
 def get_export_path():
     if platform.system()=="Darwin":
-        return raw_input("Enter path to export: ")
+        return input("Enter path to export: ")
     else:
         return sys.argv[1]
 
