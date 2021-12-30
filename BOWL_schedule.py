@@ -1,4 +1,4 @@
-import json, sys, traceback, random, csv, functools
+import json, sys, traceback, random, csv, functools, platform
 
 def get_export_path():
     if platform.system()=="Darwin":
