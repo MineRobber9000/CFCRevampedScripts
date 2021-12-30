@@ -32,8 +32,7 @@ try: # errors end up in error.txt
         log("Creating placeholder CCG for",conference["name"],"Conference")
         game = {}
         game["homeTid"] = TEAM
-        game["awayTid"] = TEAM+1
-        TEAM += 2
+        game["awayTid"] = TEAM
         game["day"] = WEEK
         game["gid"] = GID
         GID += 1 # GID increases by 1 without gaps
