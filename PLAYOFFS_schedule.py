@@ -60,7 +60,7 @@ def dictcopy(d):
 
 try: # errors end up in error.txt
     # Load in the export (dropped onto BOWL_schedule.py)
-    with open(sys.argv[1]) as f:
+    with open(get_export_path()) as f:
         export = json.load(f)
 
     # Load in at-large playoff bids
