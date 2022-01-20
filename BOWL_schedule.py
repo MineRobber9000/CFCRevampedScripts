@@ -7,12 +7,16 @@ def get_export_path():
         return sys.argv[1]
 
 def overallRecord(team):
+    # shouldn't need this but better safe than sorry
+    if (team["won"]+team["lost"])==0: return 0
     return team["won"]/(team["won"]+team["lost"])
 
 def confRecord(team):
+    if (team["wonConf"]+team["lostConf"])==0: return 0
     return team["wonConf"]/(team["wonConf"]+team["lostConf"])
 
 def divRecord(team):
+    if (team["wonDiv"]+team["lostDiv"])==0: return 0
     return team["wonDiv"]/(team["wonDiv"]+team["lostDiv"])
 
 def headToHead(t1,t2,export,season):
