@@ -1,12 +1,12 @@
-import colley, json, sys, platform, traceback
-
-def get_export_path():
-    if platform.system()=="Darwin":
-        return input("Enter path to export: ")
-    else:
-        return sys.argv[1]
-
 try: # errors end up in error.txt
+    import colley, json, sys, platform, traceback
+
+    def get_export_path():
+        if platform.system()=="Darwin" or True:
+            return input("Enter path to export: ")
+        else:
+            return sys.argv[1]
+
     # Load in the export (dropped onto CCG_schedule.py)
     with open(get_export_path()) as f:
         export = json.load(f)
