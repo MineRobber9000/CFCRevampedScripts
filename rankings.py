@@ -1,14 +1,14 @@
 try: # errors end up in error.txt
-    import colley, json, sys, platform, traceback
+    import colley, json, sys, platform, traceback, codecs
 
     def get_export_path():
-        if platform.system()=="Darwin" or True:
+        if platform.system()=="Darwin":
             return input("Enter path to export: ")
         else:
             return sys.argv[1]
 
     # Load in the export (dropped onto CCG_schedule.py)
-    with open(get_export_path()) as f:
+    with codecs.open(get_export_path(),encoding="utf-8") as f:
         export = json.load(f)
 
     # Figure out which season we're in
