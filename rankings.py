@@ -27,7 +27,7 @@ try: # errors end up in error.txt
 
     rankings = colley.process(games,weight_fn=lambda game: 0.75**game.kwargs["overtimes"],margin=True)
 
-    with open("output.txt","w") as f:
+    with open("rankings.txt","w") as f:
         for rank, team in enumerate(rankings,1):
             team, score = team
             team = teams[team]
