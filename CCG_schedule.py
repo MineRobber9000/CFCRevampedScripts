@@ -61,9 +61,9 @@ try: # errors end up in error.txt
     # https://football-gm.com/manual/customization/game-attributes/#confs-divs
     # But for leagues in progress, this stores a history of conferences, so we
     # need the latest one.
-    CONFS = export["gameAttributes"]["confs"][-1]["value"]
+    CONFS = export["gameAttributes"]["confs"] #[-1]["value"]
     # Same with divisions.
-    DIVS = export["gameAttributes"]["divs"][-1]["value"]
+    DIVS = export["gameAttributes"]["divs"] #[-1]["value"]
 
     # Little logging facility (useful for finding bugs)
     _log = []
@@ -83,66 +83,90 @@ try: # errors end up in error.txt
         assert game!=None,"Cannot find placeholder game to replace"
         # Now we need the two divisions that are in this conference
         divs = [div for div in DIVS if div["cid"]==conference["cid"]]
-        assert len(divs)==2, f"Should be 2 divs per conference ({conference['name']} has {len(divs)} div(s))"
-        # Create a list of this season's teams
-        div1teams = []
-        div2teams = []
-        for team in export["teams"]:
-            if team["did"] not in [div["did"] for div in divs]: continue # if not in either division, ignore
-            if not any([season["season"]==SEASON for season in team["seasons"]]): continue # if not active, ignore
-            if team["did"]==divs[0]["did"]: # 1st division
-                div1teams.append(max(team["seasons"],key=lambda season: season["season"])) # most recent should be this season
-            else: # 2nd division (if the team was in neither division we wouldn't be here)
-                div2teams.append(max(team["seasons"],key=lambda season: season["season"])) # most recent should be this season
-        # Sort by conf record, then div record
-        # H2H will only be resolved if it is relevant
-        # reverse=True ensures the best team is divXteams[0]
-        div1teams.sort(key=lambda team: (divRecord(team),confRecord(team)),reverse=True)
-        div2teams.sort(key=lambda team: (divRecord(team),confRecord(team)),reverse=True)
-        # Now to determine the participants
-        div1team = None
-        # Only teams in running are the "top" team and those tied with them
-        div1topteams = [dictcopy(team) for team in div1teams if confRecord(team)==confRecord(div1teams[0]) and divRecord(team)==divRecord(div1teams[0])]
-        # There can only be one
-        while len(div1topteams)>1:
-            # I'm not sure how one would fairly run a head-to-head tiebreaker, but random chance can't be that unfair, can it?
-            # Pick 2 random teams
-            team1, team2 = random.sample(div1topteams,2)
-            # Run their head to head
-            winnerTid = headToHead(team1["tid"],team2["tid"],export,SEASON)
-            # Loser is removed from the running
-            if winnerTid==team1["tid"]:
-                div1topteams.remove(team2)
-            else:
-                div1topteams.remove(team1)
-        div1team = div1topteams[0]
-        # Now for 2nd division
-        div2team = None
-        # Only teams in running are the "top" team and those tied with them
-        div2topteams = [dictcopy(team) for team in div2teams if confRecord(team)==confRecord(div2teams[0]) and divRecord(team)==divRecord(div2teams[0])]
-        # There can only be one
-        while len(div2topteams)>1:
-            # I'm not sure how one would fairly run a head-to-head tiebreaker, but random chance can't be that unfair, can it?
-            # Pick 2 random teams
-            team1, team2 = random.sample(div2topteams,2)
-            # Run their head to head
-            winnerTid = headToHead(team1["tid"],team2["tid"],export,SEASON)
-            # Loser is removed from the running
-            if winnerTid==team1["tid"]:
-                div2topteams.remove(team2)
-            else:
-                div2topteams.remove(team1)
-        div2team = div2topteams[0]
-        # we now have the top teams in either division
-        # now figure out who hosts whom
-        participants = [div1team, div2team]
-        participants.sort(key=lambda team: (divRecord(team),confRecord(team)),reverse=True)
-        if confRecord(participants[0])==confRecord(participants[1]):
-            h2h = headToHead(participants[0]["tid"],participants[1]["tid"],export,SEASON)
-            participants.sort(key=lambda team: team["tid"]==h2h,reverse=True) # winner of h2h gets home field advantage
-        game["homeTid"]=participants[0]["tid"]
-        game["awayTid"]=participants[1]["tid"]
-        log(participants[1]["region"],"at",participants[0]["region"])
+        # goddamnit archi3
+        #assert len(divs)==2, f"Should be 2 divs per conference ({conference['name']} has {len(divs)} div(s))"
+        if len(divs)==2:
+            # Create a list of this season's teams
+            div1teams = []
+            div2teams = []
+            for team in export["teams"]:
+                if team["did"] not in [div["did"] for div in divs]: continue # if not in either division, ignore
+                if not any([season["season"]==SEASON for season in team["seasons"]]): continue # if not active, ignore
+                if team["did"]==divs[0]["did"]: # 1st division
+                    div1teams.append(max(team["seasons"],key=lambda season: season["season"])) # most recent should be this season
+                else: # 2nd division (if the team was in neither division we wouldn't be here)
+                    div2teams.append(max(team["seasons"],key=lambda season: season["season"])) # most recent should be this season
+            # Sort by conf record, then div record
+            # H2H will only be resolved if it is relevant
+            # reverse=True ensures the best team is divXteams[0]
+            div1teams.sort(key=lambda team: (divRecord(team),confRecord(team)),reverse=True)
+            div2teams.sort(key=lambda team: (divRecord(team),confRecord(team)),reverse=True)
+            # Now to determine the participants
+            div1team = None
+            # Only teams in running are the "top" team and those tied with them
+            div1topteams = [dictcopy(team) for team in div1teams if confRecord(team)==confRecord(div1teams[0]) and divRecord(team)==divRecord(div1teams[0])]
+            # There can only be one
+            while len(div1topteams)>1:
+                # I'm not sure how one would fairly run a head-to-head tiebreaker, but random chance can't be that unfair, can it?
+                # Pick 2 random teams
+                team1, team2 = random.sample(div1topteams,2)
+                # Run their head to head
+                winnerTid = headToHead(team1["tid"],team2["tid"],export,SEASON)
+                # Loser is removed from the running
+                if winnerTid==team1["tid"]:
+                    div1topteams.remove(team2)
+                else:
+                    div1topteams.remove(team1)
+            div1team = div1topteams[0]
+            # Now for 2nd division
+            div2team = None
+            # Only teams in running are the "top" team and those tied with them
+            div2topteams = [dictcopy(team) for team in div2teams if confRecord(team)==confRecord(div2teams[0]) and divRecord(team)==divRecord(div2teams[0])]
+            # There can only be one
+            while len(div2topteams)>1:
+                # I'm not sure how one would fairly run a head-to-head tiebreaker, but random chance can't be that unfair, can it?
+                # Pick 2 random teams
+                team1, team2 = random.sample(div2topteams,2)
+                # Run their head to head
+                winnerTid = headToHead(team1["tid"],team2["tid"],export,SEASON)
+                # Loser is removed from the running
+                if winnerTid==team1["tid"]:
+                    div2topteams.remove(team2)
+                else:
+                    div2topteams.remove(team1)
+            div2team = div2topteams[0]
+            # we now have the top teams in either division
+            # now figure out who hosts whom
+            participants = [div1team, div2team]
+            participants.sort(key=lambda team: (divRecord(team),confRecord(team)),reverse=True)
+            if confRecord(participants[0])==confRecord(participants[1]):
+                h2h = headToHead(participants[0]["tid"],participants[1]["tid"],export,SEASON)
+                participants.sort(key=lambda team: team["tid"]==h2h,reverse=True) # winner of h2h gets home field advantage
+            game["homeTid"]=participants[0]["tid"]
+            game["awayTid"]=participants[1]["tid"]
+            log(participants[1]["region"],"at",participants[0]["region"])
+        elif len(divs)==1:
+            div1teams = []
+            for team in export["teams"]:
+                if team["did"] not in [div["did"] for div in divs]: continue # if not in either division, ignore
+                if not any([season["season"]==SEASON for season in team["seasons"]]): continue # if not active, ignore
+                if team["did"]==divs[0]["did"]: # 1st division
+                    div1teams.append(max(team["seasons"],key=lambda season: season["season"])) # most recent should be this season
+            # Sort by conf record, then div record
+            # H2H will only be resolved if it is relevant
+            # reverse=True ensures the best team is divXteams[0]
+            div1teams.sort(key=lambda team: (divRecord(team),confRecord(team)),reverse=True)
+            # now figure out who hosts whom
+            participants = div1teams[:2]
+            participants.sort(key=lambda team: (divRecord(team),confRecord(team)),reverse=True)
+            if confRecord(participants[0])==confRecord(participants[1]):
+                h2h = headToHead(participants[0]["tid"],participants[1]["tid"],export,SEASON)
+                participants.sort(key=lambda team: team["tid"]==h2h,reverse=True) # winner of h2h gets home field advantage
+            game["homeTid"]=participants[0]["tid"]
+            game["awayTid"]=participants[1]["tid"]
+            log(participants[1]["region"],"at",participants[0]["region"])
+        else:
+            raise Exception(divs)
 
     # Now schedule bowl game placeholders
     WEEK += 1 # week after CCGs
@@ -159,9 +183,8 @@ try: # errors end up in error.txt
 
     with open("output.json","w") as f:
         json.dump(export,f)
+    with open("output.txt","w") as f:
+        f.write("\n".join(_log))
 except:
     with open("error.txt","w") as f:
         traceback.print_exc(file=f)
-finally:
-    with open("output.txt","w") as f:
-        f.write("\n".join(_log))

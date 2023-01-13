@@ -118,9 +118,9 @@ try: # errors end up in error.txt
     # https://football-gm.com/manual/customization/game-attributes/#confs-divs
     # But for leagues in progress, this stores a history of conferences, so we
     # need the latest one.
-    CONFS = export["gameAttributes"]["confs"][-1]["value"]
+    CONFS = export["gameAttributes"]["confs"] #[-1]["value"]
     # Same with divisions.
-    DIVS = export["gameAttributes"]["divs"][-1]["value"]
+    DIVS = export["gameAttributes"]["divs"] #[-1]["value"]
 
     # Little logging facility (useful for finding bugs)
     _log = []

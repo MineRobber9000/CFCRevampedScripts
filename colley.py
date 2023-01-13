@@ -4,7 +4,7 @@ from scipy.special import binom
 from functools import reduce
 
 class Game:
-    def __init__(self,winner,loser,winner_score,loser_score,**kwargs):
+    def __init__(self,winner,loser,winner_score=0,loser_score=0,**kwargs):
         self.__dict__.update(locals())
 
 def mov_factor(game):

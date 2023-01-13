@@ -25,7 +25,7 @@ try: # errors end up in error.txt
     # https://football-gm.com/manual/customization/game-attributes/#confs-divs
     # But for leagues in progress, this stores a history of conferences, so we
     # need the latest one.
-    CONFS = export["gameAttributes"]["confs"][-1]["value"]
+    CONFS = export["gameAttributes"]["confs"]
 
     # Little logging facility (useful for finding bugs)
     _log = []
