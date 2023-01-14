@@ -6,3 +6,6 @@ Texas Bowl,Texas Delta,2,Western,3
 New Orleans Bowl,Dixie Coast,2,Texas Delta,3
 Music City Bowl,Great Lakes,2,Heartland,3
 New Mexico Bowl,None,None,None,None
+Mayo Bowl,None,None,None,None
+Burger King Bowl,None,None,None,None
+Sun Bowl,None,None,None,None
